@@ -2,7 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
-#include "manip_exchange.h"
+// #include "manip_exchange.h"
 
 typedef struct {
     char CPF[12];
@@ -110,6 +110,7 @@ void consultarextrato(int usuariologado) {
 }
 
 void depositar(int usuariologado) {
+    system("cls");  //funciona (implementar no manip dps) e ver o tempo sertin de colocar
     float depositado = 0;
     verificacao(usuariologado);
     printf("══════════[Depositar]══════════\n");
@@ -120,6 +121,7 @@ void depositar(int usuariologado) {
 }
 
 void sacar(int usuariologado) {
+    system("cls");
     float sacado = 0;
     verificacao(usuariologado);
     printf("══════════[Sacar]══════════\n");
@@ -133,14 +135,95 @@ void sacar(int usuariologado) {
     }
 }
 
-void comprar(int usuariologado) {
+void comprar(int usuariologado) {       //funcionando :)
+    system("cls");
+    char escolha;
+    float comprar, taxa;
     verificacao(usuariologado);
     printf("══════════[Comprar Cripto]══════════\n");
+    printf("════════════════════════════════════\n");
+    printf("Cotação das Criptomoedas:\n\tBitcoin:\t%f\n\tEthereum:\t%f\n\tRipple:\t%f\n\nQue moeda deseja comprar? (B/E/R)", moedas.cotacaoBTC, moedas.cotacaoETH, moedas.cotacaoXRP);
+    scanf(" %c", &escolha);
+    switch (escolha)
+    {
+    case 'B':
+        system("cls");  
+        printf("Você possui:\tR$%.2f\nCotação do Bitcoin:\t%f\n\nQuantos Bitcoins deseja comprar? ", pessoas[usuariologado].reais,moedas.cotacaoBTC);
+        scanf("%f", &comprar);
+        taxa = (pessoas[usuariologado].reais - comprar)*0.02 + comprar;
+        if(pessoas[usuariologado].reais - (taxa+moedas.cotacaoBTC) >= 0){
+            pessoas[usuariologado].btc += comprar;
+            pessoas[usuariologado].reais = -taxa + moedas.cotacaoBTC;
+            consultarsaldo(usuariologado);
+        }
+        else{
+            printf("Você não possui reais necessarios para comprar essa quantia de Bitcoin");
+        }
+        break;
+    case 'E':
+        system("cls");
+        printf("Você possui:\tR$%.2f\nCotação do Ethereum:\t%f\n\nQuantos Ethereum deseja comprar? ", moedas.cotacaoETH);
+        scanf("%f", &comprar);
+        taxa = (pessoas[usuariologado].reais - comprar)*0.01 + comprar;
+        if(pessoas[usuariologado].reais - (taxa+moedas.cotacaoETH) >= 0){
+            pessoas[usuariologado].eth += comprar;
+            pessoas[usuariologado].reais = -taxa+moedas.cotacaoETH;
+            consultarsaldo(usuariologado);
+        }
+        else{
+            printf("Você não possui reais necessarios para comprar essa quantia de Ethereum");
+        }
+        break;
+    case 'R':
+        system("cls");
+        printf("Você possui:\tR$%.2f\nCotação do Ripple:\t%f\n\nQuantos Ripple deseja comprar? ", moedas.cotacaoXRP);
+        scanf("%f", &comprar);
+        taxa = (pessoas[usuariologado].reais - comprar)*0.01 + comprar;
+        if(pessoas[usuariologado].reais - (taxa+moedas.cotacaoXRP) >= 0){
+            pessoas[usuariologado].xrp += comprar;
+            pessoas[usuariologado].reais = -taxa+moedas.cotacaoXRP;
+            consultarsaldo(usuariologado);
+        }
+        else{
+            printf("Você não possui reais necessarios para comprar essa quantia de Ripple");
+        }
+        break;
+    
+    default:
+        printf("Este comando não é valido, tente novamente.");
+        break;
+    }
 }
 
 void vender(int usuariologado) {
+    system("cls");
+    char escolha;
+    float juros, venda;
     verificacao(usuariologado);
     printf("══════════[Vender Cripto]══════════\n");
+    printf("════════════════════════════════════\n");
+    printf("Cotação das Criptomoedas:\n\tBitcoin:\t%f\n\tEthereum:\t%f\n\tRipple:\t%f\n\nQue moeda deseja vender? (B/E/R)", moedas.cotacaoBTC, moedas.cotacaoETH, moedas.cotacaoXRP);
+    scanf(" %c", &escolha);
+    switch (escolha)
+    {
+    case 'B':
+        system("cls");
+        printf("Você possui:\tR$%.2f\nCotação do Bitcoin:\t%f\n\nQuantos Bitcoins deseja vender? ", moedas.cotacaoBTC);
+        scanf("%f", venda);
+        if(venda <= pessoas[usuariologado].btc){
+            juros = (venda)-(pessoas[usuariologado].btc)*0.03;
+            pessoas[usuariologado].btc -= venda;    
+            pessoas[usuariologado].reais += (juros*moedas.cotacaoBTC);          //arrumar a logica(mi cabeça num vai) e colocar as outras moedas
+            consultarsaldo(usuariologado);
+        }
+        else{
+            printf("Saldo de Bitcoins indisponível.");
+        }
+        break;
+    default:
+        printf("Este comando não é valido, tente novamente");
+        break;
+    }
 }
 
 void atualizar() {
@@ -148,10 +231,11 @@ void atualizar() {
 }
 
 void login(int usuariologado) {
+    system("cls");
     char cpflogin[12];
     char senhalogin[7];
 
-    printf("Login\n");
+    printf("══════════[Login]══════════\n");
     printf("Digite o CPF: ");
     scanf("%11s", cpflogin);
     getchar();
@@ -178,10 +262,11 @@ void login(int usuariologado) {
 }
 
 void cadastro(int usuariologado) {
+    system("cls");
     char cpfcadastro[12];
     char senhacadastro[7];
 
-    printf("Cadastro\n");
+    printf("══════════[Cadastro]══════════\n");
     printf("Digite seu CPF (Só pode possuir 11 dígitos): ");
     scanf("%11s", cpfcadastro);
     getchar(); 
@@ -225,6 +310,7 @@ void cadastro(int usuariologado) {
 }
 
 void menuinicial(int usuariologado) {
+    system("cls");
     char opc;
     while (1) {
         printf("╔══════════[Menu Inicial]══════════╗\n");
@@ -254,6 +340,7 @@ void menuinicial(int usuariologado) {
 }
 
 void menu(int usuariologado) {
+    system("cls");
     char opc;
     while (1) {
         printf(" ╠════════════════════════════════════════════════╣\n");
