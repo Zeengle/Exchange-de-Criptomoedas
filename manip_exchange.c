@@ -1,29 +1,71 @@
-void consultarsaldo() {
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <stdlib.h>
+
+typedef struct {
+    char CPF[12];
+    char senha[7];  
+    char nome[100];
+    float REAIS;
+    float BTC;
+    float ETH;
+    float XRP;
+    char EXT[100][100];
+} pessoa;
+
+typedef struct {
+    float cotacaoBTC;
+    float cotacaoETH;
+    float cotacaoXRP;
+} Moedas;
+
+pessoa pessoas[10];
+Moedas moedas = {100.0, 50.0, 25.0};
+
+void verificação(int usuariologado){
+    while (1){
+        char senha[7];
+        printf("Digite sua senha: ");
+        scanf("%s", senha);
+        if(strcmp(pessoas[usuariologado].senha, senha)==0){
+            return;
+        }else{
+            printf("Senha inválido. Tente novamente");
+        }
+    }
+}
+
+void consultarsaldo(int usuariologado) {
     printf("EM construção\n");
     return;
 }
 
-void consultarextrato() {
+void consultarextrato(int usuariologado) {
     printf("EM construção\n");
     return;
 }
 
-void depositar() {
+void depositar(int usuariologado) {
+    verificação(usuariologado);
     printf("EM construção\n");
     return;
 }
 
-void sacar() {
+void sacar(int usuariologado) {
+    verificação(usuariologado);
     printf("EM construção\n");
     return;
 }
 
-void comprar() {
+void comprar(int usuariologado) {
+    verificação(usuariologado);
     printf("EM construção\n");
     return;
 }
 
-void vender() {
+void vender(int usuariologado) {
+    verificação(usuariologado);
     printf("EM construção\n");
     return;
 }
@@ -33,11 +75,11 @@ void atualizar() {
     return;
 }
 
-void login() {
-char cpflogin[12];
+void login(int usuariologado) {
+    char cpflogin[12];
     char senhalogin[7];
 
-    printf("══════════[Login]══════════\n");
+    printf("Login\n");
     printf("Digite o CPF: ");
     scanf("%11s", cpflogin);
     getchar();
@@ -50,22 +92,25 @@ char cpflogin[12];
             if (strcmp(senhalogin, pessoas[i].senha) == 0) {
                 printf("Logado com sucesso\n");
                 usuariologado = i;
-                menu();
+                menu(usuariologado);
                 return;
             } else {
                 printf("Senha incorreta\n");
-                menuinicial();
+                menuinicial(usuariologado);
                 return;
             }
         }
     }
+    printf("CPF não cadastrado!\n");
+    menuinicial(usuariologado);
+    return;
 }
 
-void cadastro() {
+void cadastro(int usuariologado) {
     char cpfcadastro[12];
     char senhacadastro[7];
 
-    printf("══════════[Cadastro]══════════\n");
+    printf("Cadastro\n");
     printf("Digite seu CPF (Só pode possuir 11 dígitos): ");
     scanf("%11s", cpfcadastro);
     getchar(); 
@@ -73,11 +118,11 @@ void cadastro() {
     for (int i = 0; i < 10; i++) {
         if (strcmp(cpfcadastro, pessoas[i].CPF) == 0) {
             printf("CPF já cadastrado\n");
-            menuinicial();
+            menuinicial(usuariologado);
             return;
         } else if (strlen(cpfcadastro) != 11) {
             printf("CPF inválido\n");
-            menuinicial();
+            menuinicial(usuariologado);
             return;
         } else if (pessoas[i].CPF[0] == '\0') {
             printf("Digite sua senha (numérica com 6 dígitos): ");
@@ -97,18 +142,18 @@ void cadastro() {
                 pessoas[i].XRP = 0.00;
                 pessoas[i].REAIS = 0.00;
                 printf("Cadastro realizado com sucesso!\n");
-                menuinicial();
+                menuinicial(usuariologado);
                 return;
             } else {
                 printf("Senha inválida. Deve ter 6 dígitos.\n");
-                menuinicial();
+                menuinicial(usuariologado);
                 return;
             }
         }
     }
 }
 
-void menuinicial() { // Função com as opções iniciais
+void menuinicial(int usuariologado) {
     char opc;
     while (1) {
         printf("╔══════════[Menu Inicial]══════════╗\n");
@@ -122,10 +167,10 @@ void menuinicial() { // Função com as opções iniciais
 
         switch (opc) {
         case '1':
-            cadastro();
+            cadastro(usuariologado);
             return;
         case '2':
-            login();
+            login(usuariologado);
             return;
         case '3':
             return;
@@ -136,11 +181,11 @@ void menuinicial() { // Função com as opções iniciais
     }
 }
 
-void menu() { // Função que mostra as funções pros usuários
+void menu(int usuariologado) {
     char opc;
     while (1) {
         printf(" ╠════════════════════════════════════════════════╣\n");
-        printf("   Bem-vindo, x");
+        printf("   Bem-vindo, %s\n", pessoas[usuariologado].nome);
         printf(" ╠════════════════[Menu de opções]════════════════╣\n");
         printf(" ║ Aperte [1] para consultar saldo                ║\n");
         printf(" ║ Aperte [2] para consultar extrato              ║\n");
@@ -156,28 +201,28 @@ void menu() { // Função que mostra as funções pros usuários
         getchar(); 
         switch (opc) {
         case '1':
-            consultarsaldo();
+            consultarsaldo(usuariologado);
             return;
         case '2':
-            consultarextrato();
+            consultarextrato(usuariologado);
             return;
         case '3':
-            depositar();
+            depositar(usuariologado);
             return;
         case '4':
-            sacar();
+            sacar(usuariologado);
             return;
         case '5':
-            comprar();
+            comprar(usuariologado);
             return;
         case '6':
-            vender();
+            vender(usuariologado);
             return;
         case '7':
             atualizar();
             return;
         case '8':
-            menuinicial();
+            menuinicial(usuariologado);
             return;
         default:
             printf("Opção inválida, tente novamente\n");

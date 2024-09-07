@@ -1,18 +1,20 @@
 #ifndef manip_exchange
 #define manip_exchange
 
-#include <stdlib.h>
-#include <time.h>
 #include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <stdlib.h>
 
-void menu();
-void menuinicial();
-void consultarsaldo();
-void consultarextrato();
-void depositar();
-void sacar();
-void comprar();
-void vender();
+void menu(int usuariologado);
+void menuinicial(int usuariologado);
+void consultarsaldo(int usuariologado);
+void consultarextrato(int usuariologado);
+void depositar(int usuariologado);
+void sacar(int usuariologado);
+void comprar(int usuariologado);
+void vender(int usuariologado);
 void atualizar();
+void verificação(int usuariologado);
 
 #endif
