@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 typedef struct {
-    char CPF[12];
+    char CPF[11];
     char senha[7];  
     char nome[100];
     float reais;
@@ -149,7 +149,7 @@ void atualizar() {
 }
 
 void login(int usuariologado) {
-    char cpflogin[12];
+    char cpflogin[11];
     char senhalogin[7];
 
     printf("Login\n");
@@ -180,14 +180,15 @@ void login(int usuariologado) {
 }
 
 void cadastro(int usuariologado) {
-    char cpfcadastro[12];
+    int verificacao;
+    char cpfcadastro[11];
     char senhacadastro[7];
-
     printf("Cadastro\n");
     printf("Digite seu CPF (Só pode possuir 11 dígitos): ");
     scanf("%11s", cpfcadastro);
-    getchar(); 
-
+    verificacao = verificaCPF(cpfcadastro);
+    getchar();
+    if(verificacao = 1){
     for (int i = 0; i < 10; i++) {
         if (strcmp(cpfcadastro, pessoas[i].CPF) == 0) {
             printf("CPF já cadastrado\n");
@@ -217,12 +218,18 @@ void cadastro(int usuariologado) {
                 printf("Cadastro realizado com sucesso!\n");
                 menuinicial(usuariologado);
                 return;
-            } else {
+            } 
+            else {
                 printf("Senha inválida. Deve ter 6 dígitos.\n");
                 menuinicial(usuariologado);
                 return;
+                }   
             }
         }
+    }
+    else{
+        printf("CPF inválido\n");
+        menuinicial(usuariologado);
     }
 }
 
