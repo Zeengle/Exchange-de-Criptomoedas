@@ -16,5 +16,6 @@ void comprar(int usuariologado);
 void vender(int usuariologado);
 void atualizar();
 void verificação(int usuariologado);
+int verificaCPF(char *cpf);
 
 #endif
