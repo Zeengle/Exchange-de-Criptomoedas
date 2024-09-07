@@ -3,12 +3,8 @@
 
 #include <stdio.h>
 #include <string.h>
-<<<<<<< Updated upstream
 #include <time.h>
 #include <stdlib.h>
-=======
-
->>>>>>> Stashed changes
 
 void menu(int usuariologado);
 void menuinicial(int usuariologado);
