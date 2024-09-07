@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 typedef struct {
-    char CPF[11];
+    char CPF[12];
     char senha[7];  
     char nome[100];
     float reais;
@@ -96,6 +96,7 @@ void consultarsaldo(int usuariologado) {
 }
 
 void consultarextrato(int usuariologado) {
+    system("cls");
     printf("══════════[Extrato]══════════\n");
     return;
 }
@@ -132,24 +133,27 @@ void sacar(int usuariologado) {
 }
 
 void comprar(int usuariologado) {
+    system("cls");
     verificação(usuariologado);
     printf("══════════[Comprar Cripto]══════════\n");
     return;
 }
 
 void vender(int usuariologado) {
+    system("cls");
     verificação(usuariologado);
     printf("══════════[Vender Cripto]══════════\n");
     return;
 }
 
 void atualizar() {
+    system("cls");
     printf("══════════[Atualizar]══════════\n");
     return;
 }
 
 void login(int usuariologado) {
-    char cpflogin[11];
+    char cpflogin[12];
     char senhalogin[7];
 
     printf("Login\n");
@@ -180,15 +184,14 @@ void login(int usuariologado) {
 }
 
 void cadastro(int usuariologado) {
-    int verificacao;
-    char cpfcadastro[11];
+    char cpfcadastro[12];
     char senhacadastro[7];
+
     printf("Cadastro\n");
     printf("Digite seu CPF (Só pode possuir 11 dígitos): ");
     scanf("%11s", cpfcadastro);
-    verificacao = verificaCPF(cpfcadastro);
-    getchar();
-    if(verificacao = 1){
+    getchar(); 
+
     for (int i = 0; i < 10; i++) {
         if (strcmp(cpfcadastro, pessoas[i].CPF) == 0) {
             printf("CPF já cadastrado\n");
@@ -218,18 +221,12 @@ void cadastro(int usuariologado) {
                 printf("Cadastro realizado com sucesso!\n");
                 menuinicial(usuariologado);
                 return;
-            } 
-            else {
+            } else {
                 printf("Senha inválida. Deve ter 6 dígitos.\n");
                 menuinicial(usuariologado);
                 return;
-                }   
             }
         }
-    }
-    else{
-        printf("CPF inválido\n");
-        menuinicial(usuariologado);
     }
 }
 
@@ -253,6 +250,7 @@ void menuinicial(int usuariologado) {
             login(usuariologado);
             return;
         case '3':
+            exit(0);    //sair do projeto
             return;
         default:
             printf("Opção inválida, tente novamente\n");
