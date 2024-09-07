@@ -34,15 +34,38 @@ void atualizar() {
 }
 
 void login() {
-    printf("Em construção");
-    return;
+char cpflogin[12];
+    char senhalogin[7];
+
+    printf("══════════[Login]══════════\n");
+    printf("Digite o CPF: ");
+    scanf("%11s", cpflogin);
+    getchar();
+
+    for (int i = 0; i < 10; i++) {
+        if (strcmp(cpflogin, pessoas[i].CPF) == 0) {
+            printf("Digite sua senha: ");
+            scanf("%6s", senhalogin);
+            getchar();
+            if (strcmp(senhalogin, pessoas[i].senha) == 0) {
+                printf("Logado com sucesso\n");
+                usuariologado = i;
+                menu();
+                return;
+            } else {
+                printf("Senha incorreta\n");
+                menuinicial();
+                return;
+            }
+        }
+    }
 }
 
 void cadastro() {
     char cpfcadastro[12];
     char senhacadastro[7];
 
-    printf("Cadastro\n");
+    printf("══════════[Cadastro]══════════\n");
     printf("Digite seu CPF (Só pode possuir 11 dígitos): ");
     scanf("%11s", cpfcadastro);
     getchar(); 

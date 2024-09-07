@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include  <time.h>
+#include <time.h>
 #include "manip_exchange.h"
 
 typedef struct { // Struct com as informações das pessoas
