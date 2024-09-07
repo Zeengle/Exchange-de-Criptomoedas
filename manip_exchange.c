@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 typedef struct {
-    char CPF[12];
+    char CPF[11];
     char senha[7];  
     char nome[100];
     float reais;
@@ -153,7 +153,7 @@ void atualizar() {
 }
 
 void login(int usuariologado) {
-    char cpflogin[12];
+    char cpflogin[11];
     char senhalogin[7];
 
     printf("Login\n");
@@ -184,7 +184,7 @@ void login(int usuariologado) {
 }
 
 void cadastro(int usuariologado) {
-    char cpfcadastro[12];
+    char cpfcadastro[11];
     char senhacadastro[7];
 
     printf("Cadastro\n");
