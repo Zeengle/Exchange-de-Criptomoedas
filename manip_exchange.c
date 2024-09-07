@@ -39,7 +39,50 @@ void login() {
 }
 
 void cadastro() {
-    printf("Em construção");
+    char cpfcadastro[12];
+    char senhacadastro[7];
+
+    printf("Cadastro\n");
+    printf("Digite seu CPF (Só pode possuir 11 dígitos): ");
+    scanf("%11s", cpfcadastro);
+    getchar(); 
+
+    for (int i = 0; i < 10; i++) {
+        if (strcmp(cpfcadastro, pessoas[i].CPF) == 0) {
+            printf("CPF já cadastrado\n");
+            menuinicial();
+            return;
+        } else if (strlen(cpfcadastro) != 11) {
+            printf("CPF inválido\n");
+            menuinicial();
+            return;
+        } else if (pessoas[i].CPF[0] == '\0') {
+            printf("Digite sua senha (numérica com 6 dígitos): ");
+            scanf("%6s", senhacadastro);
+            getchar(); // nunca mais esqueceer
+            if (strlen(senhacadastro) == 6) {
+                strcpy(pessoas[i].CPF, cpfcadastro);
+                strcpy(pessoas[i].senha, senhacadastro);
+                printf("Digite seu nome: ");
+                fgets(pessoas[i].nome, 100, stdin);
+                size_t len = strlen(pessoas[i].nome);
+                if (len > 0 && pessoas[i].nome[len - 1] == '\n') { // arruma a string
+                    pessoas[i].nome[len - 1] = '\0';
+                }
+                pessoas[i].BTC = 0.00;
+                pessoas[i].ETH = 0.00;
+                pessoas[i].XRP = 0.00;
+                pessoas[i].REAIS = 0.00;
+                printf("Cadastro realizado com sucesso!\n");
+                menuinicial();
+                return;
+            } else {
+                printf("Senha inválida. Deve ter 6 dígitos.\n");
+                menuinicial();
+                return;
+            }
+        }
+    }
 }
 
 void menuinicial() { // Função com as opções iniciais
