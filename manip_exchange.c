@@ -128,6 +128,7 @@ void menuinicial() { // Função com as opções iniciais
             login();
             return;
         case '3':
+            exit(0);
             return;
         default:
             printf("Opção inválida, tente novamente\n");
