@@ -1,82 +1,41 @@
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <stdlib.h>
-
-typedef struct {
-    char CPF[12];
-    char senha[7];  
-    char nome[100];
-    float REAIS;
-    float BTC;
-    float ETH;
-    float XRP;
-    char EXT[100][100];
-} pessoa;
-
-typedef struct {
-    float cotacaoBTC;
-    float cotacaoETH;
-    float cotacaoXRP;
-} Moedas;
-
-pessoa pessoas[10];
-Moedas moedas = {100.0, 50.0, 25.0};
-
-void verificação(int usuariologado){
-    while (1){
-        char senha[7];
-        printf("Digite sua senha: ");
-        scanf("%s", senha);
-        if(strcmp(pessoas[usuariologado].senha, senha)==0){
-            return;
-        }else{
-            printf("Senha inválido. Tente novamente");
-        }
-    }
-}
-
-void consultarsaldo(int usuariologado) {
+void consultarsaldo() {
     printf("EM construção\n");
     return;
 }
 
-void consultarextrato(int usuariologado) {
+void consultarextrato() {
     printf("EM construção\n");
     return;
 }
 
-void depositar(int usuariologado) {
-    verificação(usuariologado);
+void depositar() {
     printf("EM construção\n");
     return;
 }
 
-void sacar(int usuariologado) {
-    verificação(usuariologado);
+void sacar() {
     printf("EM construção\n");
     return;
 }
 
-void comprar(int usuariologado) {
-    verificação(usuariologado);
+void comprar() {
     printf("EM construção\n");
     return;
 }
 
-void vender(int usuariologado) {
-    verificação(usuariologado);
+void vender() {
     printf("EM construção\n");
     return;
 }
 
 void atualizar() {
-    printf("EM construção\n");
+    system("cls");
+    printf("══════════[Atualizar]══════════\n");
     return;
 }
 
-void login(int usuariologado) {
-    char cpflogin[12];
+void login() {
+char cpflogin[12];
     char senhalogin[7];
 
     printf("Login\n");
@@ -137,10 +96,10 @@ void cadastro(int usuariologado) {
                 if (len > 0 && pessoas[i].nome[len - 1] == '\n') { // arruma a string
                     pessoas[i].nome[len - 1] = '\0';
                 }
-                pessoas[i].BTC = 0.00;
-                pessoas[i].ETH = 0.00;
-                pessoas[i].XRP = 0.00;
-                pessoas[i].REAIS = 0.00;
+                pessoas[i].btc = 0.00;
+                pessoas[i].eth = 0.00;
+                pessoas[i].xrp = 0.00;
+                pessoas[i].reais = 0.00;
                 printf("Cadastro realizado com sucesso!\n");
                 menuinicial(usuariologado);
                 return;
@@ -170,9 +129,10 @@ void menuinicial(int usuariologado) {
             cadastro(usuariologado);
             return;
         case '2':
-            login(usuariologado);
+            login();
             return;
         case '3':
+            exit(0);
             return;
         default:
             printf("Opção inválida, tente novamente\n");
