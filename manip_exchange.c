@@ -24,6 +24,7 @@ typedef struct {
 pessoa pessoas[10];
 Moedas moedas = {100.0, 50.0, 25.0};
 
+
 int verificaCPF(char *cpf){
     int numeros_cpf[11];
     int soma=0;
@@ -33,124 +34,100 @@ int verificaCPF(char *cpf){
     int verificador1,verificador2;
     for (int i =0;i<11;i++){
         numeros_cpf[i]=cpf[i]-48;
-        //printf("%d\n",numeros_cpf[i]);
     }
-        for(int i = 0;i<9;i++){
-            soma+=numeros_cpf[i]*maxv1;
-            maxv1--;
-        }
+    for(int i = 0;i<9;i++){
+        soma+=numeros_cpf[i]*maxv1;
+        maxv1--;
+    }
 
-        resto = soma%11;
+    resto = soma%11;
 
-        if (resto == 1 || resto == 0){
-            verificador1 = 0;
-        }
+    if (resto == 1 || resto == 0){
+        verificador1 = 0;
+    } else{
+        verificador1 = 11 - resto;
+    }
+    soma = 0;
 
-        else{
-            verificador1 = 11 - resto;
-        }
-        //printf("%d",verificador1);
-        soma = 0;
+    for (int i = 0;i<10;i++){
+        soma+=numeros_cpf[i]*maxv2;
+        maxv2--;
+    }
 
-        for (int i = 0;i<10;i++){
-            soma+=numeros_cpf[i]*maxv2;
-            maxv2--;
-        }
+    resto = soma%11;
+    if (resto == 1 || resto == 0){
+        verificador2 = 0;
+    } else{
+        verificador2 = 11 - resto;
+    }
 
-        resto = soma%11;
-        if (resto == 1 || resto == 0){
-            verificador2 = 0;
-        }
-
-        else{
-            verificador2 = 11 - resto;
-        }
-
-        //printf("%d",verificador2);
-        if (verificador1 == numeros_cpf[9] && verificador2 == numeros_cpf[10]){
-            return 1;
-        }
-
-        else{
-            return 0;
-        }
+    if (verificador1 == numeros_cpf[9] && verificador2 == numeros_cpf[10]){
+        return 1;
+    } else{
+        return 0;
+    }
 }
 
-
-void verificação(int usuariologado){
+void verificacao(int usuariologado){
     while (1){
         char senha[7];
         printf("Digite sua senha: ");
         scanf("%s", senha);
-        if(strcmp(pessoas[usuariologado].senha, senha)==0){
+        if(strcmp(pessoas[usuariologado].senha, senha) == 0){
             return;
-        }else{
-            printf("Senha inválido. Tente novamente");
+        } else{
+            printf("Senha inválida. Tente novamente\n");
         }
     }
 }
 
 void consultarsaldo(int usuariologado) {
     printf("══════════[Saldo]══════════\n");
-    printf("Nome: %s\nCPF: %s\n\nReais: %.2f\nBitcoin: %.2f\nEthereum: %.2f\nRipple: %.2f", pessoas[usuariologado].nome, pessoas[usuariologado].CPF, pessoas[usuariologado].reais, pessoas[usuariologado].btc, pessoas[usuariologado].eth, pessoas[usuariologado].xrp);
-    return;
+    printf("Nome: %s\nCPF: %s\n\nReais: %.2f\nBitcoin: %.2f\nEthereum: %.2f\nRipple: %.2f\n", 
+           pessoas[usuariologado].nome, pessoas[usuariologado].CPF, pessoas[usuariologado].reais, 
+           pessoas[usuariologado].btc, pessoas[usuariologado].eth, pessoas[usuariologado].xrp);
 }
 
 void consultarextrato(int usuariologado) {
-    system("cls");
     printf("══════════[Extrato]══════════\n");
-    return;
 }
 
 void depositar(int usuariologado) {
     float depositado = 0;
-    system("cls");
-    verificação(usuariologado);
+    verificacao(usuariologado);
     printf("══════════[Depositar]══════════\n");
     printf("Quantos reais deseja depositar?\n");
     scanf("%f", &depositado);
     pessoas[usuariologado].reais += depositado;
     consultarsaldo(usuariologado);
-    return;
 }
 
 void sacar(int usuariologado) {
     float sacado = 0;
-    system("cls");
-    verificação(usuariologado);
+    verificacao(usuariologado);
     printf("══════════[Sacar]══════════\n");
     printf("Quantos reais deseja sacar?\n");
     scanf("%f", &sacado);
     if(sacado <= pessoas[usuariologado].reais){
         pessoas[usuariologado].reais -= sacado;
-        consultarextrato(usuariologado);
-        return;
+        consultarsaldo(usuariologado);
+    } else{
+        printf("Impossível sacar este valor.\n");
     }
-    else{
-        printf("Impossivel sacar este valor.");
-        return;
-    }
-    return;
 }
 
 void comprar(int usuariologado) {
-    system("cls");
-    verificação(usuariologado);
+    verificacao(usuariologado);
     printf("══════════[Comprar Cripto]══════════\n");
-    return;
 }
 
 void vender(int usuariologado) {
-    system("cls");
-    verificação(usuariologado);
+    verificacao(usuariologado);
     printf("══════════[Vender Cripto]══════════\n");
-    return;
 }
 
 void atualizar() {
-    system("cls");
     printf("══════════[Atualizar]══════════\n");
-    return;
 }
 
 void login(int usuariologado) {
@@ -181,7 +158,6 @@ void login(int usuariologado) {
     }
     printf("CPF não cadastrado!\n");
     menuinicial(usuariologado);
-    return;
 }
 
 void cadastro(int usuariologado) {
@@ -194,29 +170,25 @@ void cadastro(int usuariologado) {
     getchar(); 
 
     for (int i = 0; i < 10; i++) {
-        if (strcmp(cpfcadastro, pessoas[i].CPF) == 0) {
+        if ((strcmp(cpfcadastro, pessoas[i].CPF) == 0)) {
             printf("CPF já cadastrado\n");
             menuinicial(usuariologado);
             return;
-        } else if (strlen(cpfcadastro) != 11) {
-            printf("CPF inválido\n");
+        }else if((strlen(cpfcadastro) != 11) || (verificaCPF(cpfcadastro) == 0)){
+            printf("CPF inválido!\n");
             menuinicial(usuariologado);
             return;
-        } else if(verificaCPF(cpfcadastro) == 0){
-            printf("CPF inválido\n");
-            menuinicial(usuariologado);
-            return;
-        } else if (pessoas[i].CPF[0] == '\0') {
+        }else if (pessoas[i].CPF[0] == '\0') {
             printf("Digite sua senha (numérica com 6 dígitos): ");
             scanf("%6s", senhacadastro);
-            getchar(); // nunca mais esqueceer
+            getchar();
             if (strlen(senhacadastro) == 6) {
                 strcpy(pessoas[i].CPF, cpfcadastro);
                 strcpy(pessoas[i].senha, senhacadastro);
                 printf("Digite seu nome: ");
                 fgets(pessoas[i].nome, 100, stdin);
                 size_t len = strlen(pessoas[i].nome);
-                if (len > 0 && pessoas[i].nome[len - 1] == '\n') { // arruma a string
+                if (len > 0 && pessoas[i].nome[len - 1] == '\n') { 
                     pessoas[i].nome[len - 1] = '\0';
                 }
                 pessoas[i].btc = 0.00;
@@ -255,7 +227,7 @@ void menuinicial(int usuariologado) {
             login(usuariologado);
             return;
         case '3':
-            exit(0);    //sair do projeto
+            exit(0);
             return;
         default:
             printf("Opção inválida, tente novamente\n");
@@ -281,43 +253,35 @@ void menu(int usuariologado) {
         printf(" ╚════════════════════════════════════════════════╝\n");
         printf("Digite a opção: ");
         scanf(" %c", &opc);
-        getchar(); 
+        getchar();
         switch (opc) {
         case '1':
             consultarsaldo(usuariologado);
-            menu(usuariologado);
-            return;
+            break;
         case '2':
             consultarextrato(usuariologado);
-            menu(usuariologado);
-            return;
+            break;
         case '3':
             depositar(usuariologado);
-            menu(usuariologado);
-            return;
+            break;
         case '4':
             sacar(usuariologado);
-            menu(usuariologado);
-            return;
+            break;
         case '5':
             comprar(usuariologado);
-            menu(usuariologado);
-            return;
+            break;
         case '6':
             vender(usuariologado);
-            menu(usuariologado);
-            return;
+            break;
         case '7':
             atualizar();
-            menu(usuariologado);
-            return;
+            break;
         case '8':
             menuinicial(usuariologado);
-            menu(usuariologado);
-            return;
+            break;
         default:
             printf("Opção inválida, tente novamente\n");
-            return;
+            break;
         }
     }
 }
