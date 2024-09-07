@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include  <time.h>
-
+//de ladinho
 typedef struct { // Struct com as informações das pessoas
     char CPF[12]; 
     char senha[7];  
