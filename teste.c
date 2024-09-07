@@ -135,7 +135,7 @@ void sacar(int usuariologado) {
     }
 }
 
-void comprar(int usuariologado) {       //funcionando :)
+void comprar(int usuariologado) {       //funcionando :) (testa mais vezes com outros valores e tal)
     system("cls");
     char escolha;
     float comprar, taxa;
@@ -150,11 +150,11 @@ void comprar(int usuariologado) {       //funcionando :)
         system("cls");  
         printf("Você possui:\tR$%.2f\nCotação do Bitcoin:\t%f\n\nQuantos Bitcoins deseja comprar? ", pessoas[usuariologado].reais,moedas.cotacaoBTC);
         scanf("%f", &comprar);
-        taxa = (pessoas[usuariologado].reais - comprar)*0.02 + comprar;
-        if(pessoas[usuariologado].reais - (taxa+moedas.cotacaoBTC) >= 0){
-            pessoas[usuariologado].btc += comprar;
-            pessoas[usuariologado].reais = -taxa + moedas.cotacaoBTC;
-            consultarsaldo(usuariologado);
+        taxa = (pessoas[usuariologado].reais - comprar)*0.02 + comprar;     //taxação com juros
+        if(pessoas[usuariologado].reais - (taxa+moedas.cotacaoBTC) >= 0){   //verificar se vai dar valor negativo com a taxa aplicada
+            pessoas[usuariologado].btc += comprar;                          //adiciona os bitcoins comprados
+            pessoas[usuariologado].reais = -taxa + moedas.cotacaoBTC;       //faz a taxação na cotação e adiciona nos reais
+            consultarsaldo(usuariologado);                                  //(n esquecer de adicionar no extrato depois de pronto)
         }
         else{
             printf("Você não possui reais necessarios para comprar essa quantia de Bitcoin");
@@ -162,7 +162,7 @@ void comprar(int usuariologado) {       //funcionando :)
         break;
     case 'E':
         system("cls");
-        printf("Você possui:\tR$%.2f\nCotação do Ethereum:\t%f\n\nQuantos Ethereum deseja comprar? ", moedas.cotacaoETH);
+        printf("Você possui:\tR$%.2f\nCotação do Ethereum:\t%f\n\nQuantos Ethereum deseja comprar? ",pessoas[usuariologado].reais, moedas.cotacaoETH);
         scanf("%f", &comprar);
         taxa = (pessoas[usuariologado].reais - comprar)*0.01 + comprar;
         if(pessoas[usuariologado].reais - (taxa+moedas.cotacaoETH) >= 0){
@@ -176,7 +176,7 @@ void comprar(int usuariologado) {       //funcionando :)
         break;
     case 'R':
         system("cls");
-        printf("Você possui:\tR$%.2f\nCotação do Ripple:\t%f\n\nQuantos Ripple deseja comprar? ", moedas.cotacaoXRP);
+        printf("Você possui:\tR$%.2f\nCotação do Ripple:\t%f\n\nQuantos Ripple deseja comprar? ",pessoas[usuariologado].reais, moedas.cotacaoXRP);
         scanf("%f", &comprar);
         taxa = (pessoas[usuariologado].reais - comprar)*0.01 + comprar;
         if(pessoas[usuariologado].reais - (taxa+moedas.cotacaoXRP) >= 0){
@@ -208,11 +208,11 @@ void vender(int usuariologado) {
     {
     case 'B':
         system("cls");
-        printf("Você possui:\tR$%.2f\nCotação do Bitcoin:\t%f\n\nQuantos Bitcoins deseja vender? ", moedas.cotacaoBTC);
+        printf("Você possui:\tR$%.2f\nCotação do Bitcoin:\t%f\n\nQuantos Bitcoins deseja vender? ", pessoas[usuariologado].reais,moedas.cotacaoBTC);
         scanf("%f", venda);
         if(venda <= pessoas[usuariologado].btc){
-            juros = (venda)-(pessoas[usuariologado].btc)*0.03;
-            pessoas[usuariologado].btc -= venda;    
+            juros = (venda)-(pessoas[usuariologado].btc)*0.03;                  //funciona com numero pequeno / se vc tiver tipo 40 na conta da ruim(*arrumar isso ai tudo)
+            pessoas[usuariologado].btc -= venda;                                //isso aqui ok, pq tira oq vc vendeu
             pessoas[usuariologado].reais += (juros*moedas.cotacaoBTC);          //arrumar a logica(mi cabeça num vai) e colocar as outras moedas
             consultarsaldo(usuariologado);
         }
