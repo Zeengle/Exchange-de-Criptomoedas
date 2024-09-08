@@ -223,7 +223,7 @@ void vender(int usuariologado) {
     case 'B':
         system("cls");
         printf("Você possui:\tR$%.2f\nCotação do Bitcoin:\t%f\n\nQuantos Bitcoins deseja vender? ", pessoas[usuariologado].reais,moedas.cotacaoBTC);
-        scanf("%f", venda);
+        scanf("%f", &venda);
         if(pessoas[usuariologado].btc - venda >= 0){
             //printf("Até aqui foi"); DEBUGANDO...
             pessoas[usuariologado].btc -= venda;                                
@@ -239,7 +239,7 @@ void vender(int usuariologado) {
     case 'E':
         system("cls");
         printf("Você possui:\tR$%.2f\nCotação do Ethereum:\t%f\n\nQuantos Ethereuns deseja vender? ", pessoas[usuariologado].reais,moedas.cotacaoETH);
-        scanf("%f", venda);
+        scanf("%f", &venda);
         if(pessoas[usuariologado].eth - venda >= 0){
             //printf("Até aqui foi"); DEBUGANDO...
             pessoas[usuariologado].eth -= venda;                                
@@ -255,7 +255,7 @@ void vender(int usuariologado) {
     case 'R':
         system("cls");
         printf("Você possui:\tR$%.2f\nCotação do Ripple:\t%f\n\nQuantos Ripples deseja vender? ", pessoas[usuariologado].reais,moedas.cotacaoXRP);
-        scanf("%f", venda);
+        scanf("%f", &venda);
         if(pessoas[usuariologado].xrp - venda >= 0){
             //printf("Até aqui foi"); DEBUGANDO...
             pessoas[usuariologado].xrp -= venda;                                
