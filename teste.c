@@ -33,9 +33,10 @@ void depositar(int usuariologado);
 void sacar(int usuariologado);
 void comprar(int usuariologado);
 void vender(int usuariologado);
-void atualizar();
+void atualizar(int usuariologado , Moedas *moedas);
 void verificacao(int usuariologado);
 int verificaCPF(char *cpf);
+void printarcpf(char *cpf);
 
 int main() {
     int usuariologado = -1;
@@ -113,10 +114,15 @@ void verificacao(int usuariologado){
 }
 
 void consultarsaldo(int usuariologado) {
+    int lixo;
     printf("══════════[Saldo]══════════\n");
-    printf("Nome: %s\nCPF: %s\n\nReais: %.2f\nBitcoin: %.2f\nEthereum: %.2f\nRipple: %.2f\n", 
-           pessoas[usuariologado].nome, pessoas[usuariologado].CPF, pessoas[usuariologado].reais, 
+    printf("Nome: %s\n",pessoas[usuariologado].nome);
+    printf("CPF: ");
+    printarcpf(&pessoas[usuariologado].CPF);
+    printf("\nReais: %.2f\nBitcoin: %.2f\nEthereum: %.2f\nRipple: %.2f\n",pessoas[usuariologado].reais, 
            pessoas[usuariologado].btc, pessoas[usuariologado].eth, pessoas[usuariologado].xrp);
+    printf("Digite 1 para sair...\t");
+    scanf("%d", &lixo);
 }
 
 void consultarextrato(int usuariologado) {
@@ -201,7 +207,6 @@ void comprar(int usuariologado) {       //funcionando :) (testa mais vezes com o
             printf("Você não possui reais necessarios para comprar essa quantia de Ripple");
         }
         break;
-    
     default:
         printf("Este comando não é valido, tente novamente.");
         break;
@@ -274,8 +279,45 @@ void vender(int usuariologado) {
     }
 }
 
-void atualizar() {
+void atualizar(int usuariologado,Moedas *moedas) { //ta funfando não :(
+    srand(time(NULL));
+    char escolha;
+    int aleatorio = rand()%2;
+    float porcentagem = (rand()%6)/100;
+    verificacao(usuariologado);
     printf("══════════[Atualizar]══════════\n");
+    printf("Você deseja atualizar a cotação das moedas?\nBTC: R$ %.4f\nETH: R$ %.4f\nXRP: R$ %.4f\n(B,E,R)", moedas->cotacaoBTC, moedas->cotacaoETH, moedas->cotacaoXRP);
+    scanf(" %c", &escolha);
+    escolha = toupper(escolha);
+    switch (escolha) {
+        case 'B':
+            if (aleatorio == 0 ){
+                moedas->cotacaoBTC += (moedas->cotacaoBTC*porcentagem); //a seta é para mexer em ponteiro, é como se estivessemos pegando a cotação de um ponteiro tlg
+            }
+            else{
+                moedas->cotacaoBTC -= (moedas->cotacaoBTC*porcentagem);
+            }
+            break;
+        case 'E':
+            if (aleatorio == 0 ){
+                moedas->cotacaoETH += (moedas->cotacaoETH*porcentagem);
+            }
+            else{
+                moedas->cotacaoETH -= (moedas->cotacaoETH*porcentagem);
+            }
+            break;
+        case 'R':
+            if (aleatorio == 0 ){
+                moedas->cotacaoXRP += (moedas->cotacaoXRP*porcentagem);
+            }
+            else{
+                moedas->cotacaoXRP -= (moedas->cotacaoXRP*porcentagem);
+            }
+            break;
+        default:
+            printf("Escolha inválida.");
+            break;
+    }
 }
 
 void login(int usuariologado) {
@@ -426,7 +468,7 @@ void menu(int usuariologado) {
             vender(usuariologado);
             break;
         case '7':
-            atualizar();
+            atualizar(usuariologado,&moedas);
             break;
         case '8':
             menuinicial(usuariologado);
@@ -436,4 +478,16 @@ void menu(int usuariologado) {
             break;
         }
     }
+}
+void printarcpf(char *cpf) {
+  for (int i = 1; i < 12; i++) {
+    if (i % 3 == 0 && i != 1 && i != 9) {
+      printf("%c.", cpf[i - 1]);
+    } else if (i == 9) {
+      printf("%c-", cpf[i - 1]);
+    } else {
+      printf("%c", cpf[i - 1]);
+    }
+  }
+  printf("\n");
 }
