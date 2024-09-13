@@ -39,6 +39,7 @@ int verificaCPF(char *cpf);
 void printarcpf(char *cpf);
 void criaextrato(int usuariologado, char sinal, float valor, char moeda[6], float taxa);
 void limpaterminal();
+void espera();
 
 int main() {
     int usuariologado = -1;
@@ -47,7 +48,14 @@ int main() {
 }
 
 void limpaterminal(){
-    system("clear || cls");
+    system("cls || clear");
+}
+
+void espera(){
+    fflush(stdin);
+    printf("Aperte ENTER tecla para SAIR!");
+    getchar();
+    return;
 }
 
 int verificaCPF(char *cpf){
@@ -120,14 +128,14 @@ void verificacao(int usuariologado){
 }
 
 void consultarsaldo(int usuariologado) {
+    limpaterminal();
     printf("══════════[Saldo]══════════\n");
     printf("Nome: %s\n",pessoas[usuariologado].nome);
     printf("CPF: ");
     printarcpf(&pessoas[usuariologado].CPF);
     printf("\nReais: %.2f\nBitcoin: %.2f\nEthereum: %.2f\nRipple: %.2f\n",pessoas[usuariologado].reais, 
            pessoas[usuariologado].btc, pessoas[usuariologado].eth, pessoas[usuariologado].xrp);
-    getchar();
-    getchar();
+    espera();
     limpaterminal();
 }
 
@@ -138,7 +146,7 @@ void consultarextrato(int usuariologado) {
             printf("%s\n", pessoas[usuariologado].ext[i]);
         }
     }
-    getchar();
+    espera();
     limpaterminal();
 }
 
@@ -151,6 +159,7 @@ void depositar(int usuariologado) {
     printf("Quantos reais deseja depositar?\n");
     scanf("%f", &depositado);
     pessoas[usuariologado].reais += depositado;
+    espera();
     consultarsaldo(usuariologado);
     criaextrato(usuariologado, '+', depositado, "REAIS", 0);
 }
@@ -167,8 +176,9 @@ void sacar(int usuariologado) {
         consultarsaldo(usuariologado);
         criaextrato(usuariologado, '-', sacado, "REAIS", 0);
     } else{
+        getchar();
         printf("Impossível sacar este valor.\n");
-        system("pause");
+        espera();
         limpaterminal();
     }
 }
@@ -200,6 +210,7 @@ void comprar(int usuariologado) {
         }
         else{
             printf("Você não possui reais necessarios para comprar essa quantia de Bitcoin");
+            espera();
         }
         break;
     case 'E':
@@ -214,8 +225,8 @@ void comprar(int usuariologado) {
             criaextrato(usuariologado, '+', conversao, "ETH", 0.01);                                                                     
         }
         else{
-            printf("Você não possui reais necessarios para comprar essa quantia de Ethereum");
-            limpaterminal();
+            printf("Você não possui reais necessarios para comprar essa quantia de Ethereum\n");
+            espera();
         }
         break;
     case 'R':
@@ -231,12 +242,12 @@ void comprar(int usuariologado) {
         }
         else{
             printf("Você não possui reais necessarios para comprar essa quantia de Ripple");
-            system("pause");
-            limpaterminal();
+            espera();
         }
         break;
     default:
         printf("Este comando não é valido, tente novamente.");
+        espera();
         break;
     }
 }
@@ -265,10 +276,12 @@ void vender(int usuariologado) {
             printf("Você ficou com :R$%.2f e com %.2f BTC", pessoas[usuariologado].reais, pessoas[usuariologado].btc);       
             consultarsaldo(usuariologado);
             float conversao = moedas.cotacaoBTC*venda;
-            criaextrato(usuariologado, '+', conversao, "BTC", 0.02); 
+            criaextrato(usuariologado, '+', conversao, "BTC", 0.02);
+            espera();
         }
         else{
             printf("Saldo de Bitcoins indisponível.");
+            espera();
         }
         break;
     case 'E':
@@ -283,10 +296,12 @@ void vender(int usuariologado) {
             printf("Você ficou com :R$%.2f e com %.2f ETH", pessoas[usuariologado].reais, pessoas[usuariologado].eth);       
             consultarsaldo(usuariologado);
             float conversao = moedas.cotacaoETH*venda;
-            criaextrato(usuariologado, '+', conversao, "ETH", 0.02); 
+            criaextrato(usuariologado, '+', conversao, "ETH", 0.02);
+            espera();
         }
         else{
             printf("Saldo de Bitcoins indisponível.");
+            espera();
         }
         break;
     case 'R':
@@ -302,9 +317,11 @@ void vender(int usuariologado) {
             consultarsaldo(usuariologado);
             float conversao = moedas.cotacaoXRP*venda;
             criaextrato(usuariologado, '+', conversao, "XRP", 0.02);
+            espera();
         }
         else{
             printf("Saldo de Bitcoins indisponível.");
+            espera();
         }
         break;
     default:
@@ -312,17 +329,6 @@ void vender(int usuariologado) {
         break;
     }
 }
-
-void atualizar(int usuariologado) { //funfa agr
-    srand(time(NULL));
-    verificacao(usuariologado);
-    printf("══════════[Atualizar]══════════\n");
-    printf("Cotação de moeda atualizadas!\n\nBTC: R$ %.4f\nETH: R$ %.4f\nXRP: R$ %.4f\n(B,E,R)", 
-    (moeda.cotacaoBTC*((rand()%11-5)/100))+moeda.cotacaoBTC, 
-    (moeda.cotacaoETH*((rand()%11-5)/100))+moeda.cotacaoETH, 
-    (moeda.cotacaoETH*((rand()%11-5)/100))+moeda.cotacaoETH);
-}
-
 
 void login(int usuariologado) {
     limpaterminal();
@@ -352,11 +358,12 @@ void login(int usuariologado) {
         }
     }
     printf("CPF não cadastrado!\n");
+    espera();
     menuinicial(usuariologado);
 }
 
 void cadastro(int usuariologado) {
-   limpaterminal();
+    limpaterminal();
     char cpfcadastro[12];
     char senhacadastro[7];
 
@@ -368,10 +375,12 @@ void cadastro(int usuariologado) {
     for (int i = 0; i < 10; i++) {
         if ((strcmp(cpfcadastro, pessoas[i].CPF) == 0)) {
             printf("CPF já cadastrado\n");
+            espera();
             menuinicial(usuariologado);
             return;
         }else if((strlen(cpfcadastro) != 11) || (verificaCPF(cpfcadastro) == 0)){
             printf("CPF inválido!\n");
+            espera();
             menuinicial(usuariologado);
             return;
         }else if (pessoas[i].CPF[0] == '\0') {
@@ -386,16 +395,22 @@ void cadastro(int usuariologado) {
                 size_t len = strlen(pessoas[i].nome);
                 if (len > 0 && pessoas[i].nome[len - 1] == '\n') { 
                     pessoas[i].nome[len - 1] = '\0';
+                }else if(len < 3 || len > 250){
+                    printf("Nome inválido tente novamente");
+                    cadastro(usuariologado);
+                    espera();
                 }
                 pessoas[i].btc = 0.00;
                 pessoas[i].eth = 0.00;
                 pessoas[i].xrp = 0.00;
                 pessoas[i].reais = 0.00;
                 printf("Cadastro realizado com sucesso!\n");
+                espera();
                 menuinicial(usuariologado);
                 return;
-            } else {
+            } else if(sizeof(char)/sizeof(senhacadastro)!=6) {
                 printf("Senha inválida. Deve ter 6 dígitos.\n");
+                espera();
                 menuinicial(usuariologado);
                 return;
             }
@@ -407,7 +422,7 @@ void menuinicial(int usuariologado) {
     limpaterminal();
     char opc;
     while (1) {
-        printf("╔══════════[Menu Inicial]══════════╗\n");
+        printf("\n╔══════════[Menu Inicial]══════════╗\n");
         printf("║ [1] Cadastro                     ║\n");
         printf("║ [2] Login                        ║\n");
         printf("║ [3] Sair                         ║\n");
@@ -437,7 +452,7 @@ void menu(int usuariologado) {
     limpaterminal();
     char opc;
     while (1) {
-        printf(" ╠════════════════════════════════════════════════╣\n");
+        printf("\n ╠════════════════════════════════════════════════╣\n");
         printf("   Bem-vindo, %s\n", pessoas[usuariologado].nome);
         printf(" ╠════════════════[Menu de opções]════════════════╣\n");
         printf(" ║ Aperte [1] para consultar saldo                ║\n");
@@ -497,12 +512,22 @@ void printarcpf(char *cpf) {
   printf("\n");
 }
 
+void atualizar(int usuariologado) { //funfa agr
+    srand(time(NULL));
+    verificacao(usuariologado);
+    printf("══════════[Atualizar]══════════\n");
+    printf("Cotação de moeda atualizadas!\n\nBTC: R$ %.4f\nETH: R$ %.4f\nXRP: R$ %.4f\n(B,E,R)", 
+    (moeda.cotacaoBTC*((rand()%11-5)/100))+moeda.cotacaoBTC, 
+    (moeda.cotacaoETH*((rand()%11-5)/100))+moeda.cotacaoETH, 
+    (moeda.cotacaoETH*((rand()%11-5)/100))+moeda.cotacaoETH);
+}
+
 void criaextrato(int usuariologado, char sinal, float valor, char moeda[6], float taxa){
     char extrato[100];
     time_t t = time(NULL);  // Pega o horário atual
     struct tm tm = *localtime(&t); // Serve pra pegar cada informação das datas
 
-    snprintf(extrato, sizeof(extrato), "[%02d/%02d/%d %02d:%02d] \t%c%.2f \t%s \tTX: %.2f \tBTC: %.2f \tETH: %.2f \tXRP: %.2f",
+    snprintf(extrato, sizeof(extrato), "[%02d/%02d/%d %02d:%02d] \t%c\t%.2f \t%s \tTX: \t%.2f \tBTC: \t%.2f \tETH: \t%.2f \tXRP: \t%.2f",
     tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, sinal, valor, moeda, taxa, moedas.cotacaoBTC, moedas.cotacaoETH, moedas.cotacaoXRP);
 
     // Procura uma linha vazia no extrato
