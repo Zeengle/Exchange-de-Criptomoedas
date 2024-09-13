@@ -37,6 +37,7 @@ void atualizar(int usuariologado , Moedas *moedas);
 void verificacao(int usuariologado);
 int verificaCPF(char *cpf);
 void printarcpf(char *cpf);
+void criaextrato(int usuariologado, char sinal, float valor, char moeda[6], float taxa);
 
 int main() {
     int usuariologado = -1;
@@ -127,6 +128,11 @@ void consultarsaldo(int usuariologado) {
 
 void consultarextrato(int usuariologado) {
     printf("══════════[Extrato]══════════\n");
+    for (int i = 0; i < 100; i++) {
+        if (pessoas[usuariologado].ext[i][0] != '\0') {
+            printf("%s\n", pessoas[usuariologado].ext[i]);
+        }
+    }
 }
 
 void depositar(int usuariologado) {
@@ -138,6 +144,7 @@ void depositar(int usuariologado) {
     scanf("%f", &depositado);
     pessoas[usuariologado].reais += depositado;
     consultarsaldo(usuariologado);
+    criaextrato(usuariologado, '+', depositado, "REAIS", 0);
 }
 
 void sacar(int usuariologado) {
@@ -150,6 +157,7 @@ void sacar(int usuariologado) {
     if(sacado <= pessoas[usuariologado].reais){
         pessoas[usuariologado].reais -= sacado;
         consultarsaldo(usuariologado);
+        criaextrato(usuariologado, '-', sacado, "REAIS", 0);
     } else{
         printf("Impossível sacar este valor.\n");
     }
@@ -175,7 +183,9 @@ void comprar(int usuariologado) {       //funcionando :) (testa mais vezes com o
         if(pessoas[usuariologado].reais - ((moedas.cotacaoBTC*comprar)+((moedas.cotacaoBTC*comprar)*0.02))>=0){    //verificar se vai dar valor negativo com a taxa aplicada
             pessoas[usuariologado].btc += comprar;                                                              //adiciona os bitcoins comprados
             pessoas[usuariologado].reais -= ((moedas.cotacaoBTC*comprar)+((moedas.cotacaoBTC*comprar)*0.02));   //faz a taxação na cotação e adiciona nos reais
-            consultarsaldo(usuariologado);                                                                      //Quando fizeros o extrato, colocar pra adicionar isso no extrato 
+            consultarsaldo(usuariologado);
+            float conversao = moedas.cotacaoBTC*comprar;
+            criaextrato(usuariologado, '+', conversao, "BTC", 0.02);
         }
         else{
             printf("Você não possui reais necessarios para comprar essa quantia de Bitcoin");
@@ -188,7 +198,9 @@ void comprar(int usuariologado) {       //funcionando :) (testa mais vezes com o
         if(pessoas[usuariologado].reais - ((moedas.cotacaoETH*comprar)+((moedas.cotacaoETH*comprar)*0.01))>=0){    
             pessoas[usuariologado].eth += comprar;                                                              
             pessoas[usuariologado].reais -= ((moedas.cotacaoETH*comprar)+((moedas.cotacaoETH*comprar)*0.01));   
-            consultarsaldo(usuariologado);                                                                       
+            consultarsaldo(usuariologado); 
+            float conversao = moedas.cotacaoETH*comprar;
+            criaextrato(usuariologado, '+', conversao, "ETH", 0.01);                                                                      
         }
         else{
             printf("Você não possui reais necessarios para comprar essa quantia de Ethereum");
@@ -201,7 +213,9 @@ void comprar(int usuariologado) {       //funcionando :) (testa mais vezes com o
         if(pessoas[usuariologado].reais - ((moedas.cotacaoXRP*comprar)+((moedas.cotacaoXRP*comprar)*0.01))>=0){    
             pessoas[usuariologado].xrp += comprar;                                                              
             pessoas[usuariologado].reais -= ((moedas.cotacaoXRP*comprar)+((moedas.cotacaoXRP*comprar)*0.01));   
-            consultarsaldo(usuariologado);                                                                      
+            consultarsaldo(usuariologado);
+            float conversao = moedas.cotacaoXRP*comprar;
+            criaextrato(usuariologado, '+', conversao, "XRP", 0.01);                                                                     
         }
         else{
             printf("Você não possui reais necessarios para comprar essa quantia de Ripple");
@@ -236,6 +250,8 @@ void vender(int usuariologado) {
             printf("Venda realizada com sucesso!\n");
             printf("Você ficou com :R$%.2f e com %.2f BTC", pessoas[usuariologado].reais, pessoas[usuariologado].btc);       
             consultarsaldo(usuariologado);
+            float conversao = moedas.cotacaoBTC*venda;
+            criaextrato(usuariologado, '+', conversao, "BTC", 0.02);  
         }
         else{
             printf("Saldo de Bitcoins indisponível.");
@@ -252,6 +268,8 @@ void vender(int usuariologado) {
             printf("Venda realizada com sucesso!\n");
             printf("Você ficou com :R$%.2f e com %.2f ETH", pessoas[usuariologado].reais, pessoas[usuariologado].eth);       
             consultarsaldo(usuariologado);
+            float conversao = moedas.cotacaoETH*venda;
+            criaextrato(usuariologado, '+', conversao, "ETH", 0.02); 
         }
         else{
             printf("Saldo de Bitcoins indisponível.");
@@ -268,7 +286,8 @@ void vender(int usuariologado) {
             printf("Venda realizada com sucesso!\n");
             printf("Você ficou com :R$%.2f e com %.2f XRP", pessoas[usuariologado].reais, pessoas[usuariologado].xrp);       
             consultarsaldo(usuariologado);
-        }
+            float conversao = moedas.cotacaoXRP*venda;
+            criaextrato(usuariologado, '+', conversao, "XRP", 0.02);         }
         else{
             printf("Saldo de Bitcoins indisponível.");
         }
@@ -479,6 +498,7 @@ void menu(int usuariologado) {
         }
     }
 }
+
 void printarcpf(char *cpf) {
   for (int i = 1; i < 12; i++) {
     if (i % 3 == 0 && i != 1 && i != 9) {
@@ -490,4 +510,21 @@ void printarcpf(char *cpf) {
     }
   }
   printf("\n");
+}
+
+void criaextrato(int usuariologado, char sinal, float valor, char moeda[6], float taxa){
+    char extrato[100];
+    time_t t = time(NULL);  // Pega o horário atual
+    struct tm tm = *localtime(&t); // Serve pra pegar cada informação das datas
+
+    snprintf(extrato, sizeof(extrato), "[%02d/%02d/%d %02d:%02d] \t%c%.2f \t%s \tTX: %.2f \tBTC: %.2f \tETH: %.2f \tXRP: %.2f",
+    tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, sinal, valor, moeda, taxa, moedas.cotacaoBTC, moedas.cotacaoETH, moedas.cotacaoXRP);
+
+    // Procura uma linha vazia no extrato
+    for (int i = 0; i < 100; i++) {
+        if (pessoas[usuariologado].ext[i][0] == '\0') {
+            strcpy(pessoas[usuariologado].ext[i], extrato);
+            break;
+        }
+    }
 }
