@@ -313,46 +313,16 @@ void vender(int usuariologado) {
     }
 }
 
-void atualizar(int usuariologado,Moedas *moedas) { //ta funfando não :(
+void atualizar(int usuariologado) { //funfa agr
     srand(time(NULL));
-    char escolha;
-    int aleatorio = rand()%2;
-    float porcentagem = (rand()%6)/100;
     verificacao(usuariologado);
     printf("══════════[Atualizar]══════════\n");
-    printf("Você deseja atualizar a cotação das moedas?\nBTC: R$ %.4f\nETH: R$ %.4f\nXRP: R$ %.4f\n(B,E,R)", moedas->cotacaoBTC, moedas->cotacaoETH, moedas->cotacaoXRP);
-    scanf(" %c", &escolha);
-    escolha = toupper(escolha);
-    switch (escolha) {
-        case 'B':
-            if (aleatorio == 0 ){
-                moedas->cotacaoBTC += (moedas->cotacaoBTC*porcentagem); //a seta é para mexer em ponteiro, é como se estivessemos pegando a cotação de um ponteiro tlg
-            }
-            else{
-                moedas->cotacaoBTC -= (moedas->cotacaoBTC*porcentagem);
-            }
-            break;
-        case 'E':
-            if (aleatorio == 0 ){
-                moedas->cotacaoETH += (moedas->cotacaoETH*porcentagem);
-            }
-            else{
-                moedas->cotacaoETH -= (moedas->cotacaoETH*porcentagem);
-            }
-            break;
-        case 'R':
-            if (aleatorio == 0 ){
-                moedas->cotacaoXRP += (moedas->cotacaoXRP*porcentagem);
-            }
-            else{
-                moedas->cotacaoXRP -= (moedas->cotacaoXRP*porcentagem);
-            }
-            break;
-        default:
-            printf("Escolha inválida.");
-            break;
-    }
+    printf("Cotação de moeda atualizadas!\n\nBTC: R$ %.4f\nETH: R$ %.4f\nXRP: R$ %.4f\n(B,E,R)", 
+    (moeda.cotacaoBTC*((rand()%11-5)/100))+moeda.cotacaoBTC, 
+    (moeda.cotacaoETH*((rand()%11-5)/100))+moeda.cotacaoETH, 
+    (moeda.cotacaoETH*((rand()%11-5)/100))+moeda.cotacaoETH);
 }
+
 
 void login(int usuariologado) {
     limpaterminal();
