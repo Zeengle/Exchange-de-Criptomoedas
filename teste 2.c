@@ -33,7 +33,7 @@ void depositar(int usuariologado);
 void sacar(int usuariologado);
 void comprar(int usuariologado);
 void vender(int usuariologado);
-void atualizar(int usuariologado , Moedas *moedas);
+void atualizar(int usuariologado);
 void verificacao(int usuariologado);
 int verificaCPF(char *cpf);
 void printarcpf(char *cpf);
@@ -132,7 +132,7 @@ void consultarsaldo(int usuariologado) {
     printf("══════════[Saldo]══════════\n");
     printf("Nome: %s\n",pessoas[usuariologado].nome);
     printf("CPF: ");
-    printarcpf(&pessoas[usuariologado].CPF);
+    printarcpf(pessoas[usuariologado].CPF);
     printf("\nReais: %.2f\nBitcoin: %.2f\nEthereum: %.2f\nRipple: %.2f\n",pessoas[usuariologado].reais, 
            pessoas[usuariologado].btc, pessoas[usuariologado].eth, pessoas[usuariologado].xrp);
     espera();
@@ -141,6 +141,7 @@ void consultarsaldo(int usuariologado) {
 
 void consultarextrato(int usuariologado) {
     printf("══════════[Extrato]══════════\n");
+    printf("\tDATA/HORA\t\tSINAL\t\tVALOR\t\tMOEDA\t\tTAXA\t\tQUANT BTC\t\tQUANT ETH\t\tQUANT XRP\n");
     for (int i = 0; i < 100; i++) {
         if (pessoas[usuariologado].ext[i][0] != '\0') {
             printf("%s\n", pessoas[usuariologado].ext[i]);
@@ -154,11 +155,12 @@ void depositar(int usuariologado) {
     limpaterminal();
     //funciona (implementar no manip dps) e ver o tempo sertin de colocar
     float depositado = 0;
-    verificacao(usuariologado);
     printf("══════════[Depositar]══════════\n");
     printf("Quantos reais deseja depositar?\n");
     scanf("%f", &depositado);
+    verificacao(usuariologado);
     pessoas[usuariologado].reais += depositado;
+    printf("Depósito realizado com sucesso!\n");
     espera();
     consultarsaldo(usuariologado);
     criaextrato(usuariologado, '+', depositado, "REAIS", 0);
@@ -167,12 +169,14 @@ void depositar(int usuariologado) {
 void sacar(int usuariologado) {
     limpaterminal();
     float sacado = 0;
-    verificacao(usuariologado);
     printf("══════════[Sacar]══════════\n");
     printf("Quantos reais deseja sacar?\n");
     scanf("%f", &sacado);
+    verificacao(usuariologado);
     if(sacado <= pessoas[usuariologado].reais){
         pessoas[usuariologado].reais -= sacado;
+        printf("Saque realizado com sucesso!\n");
+        espera();
         consultarsaldo(usuariologado);
         criaextrato(usuariologado, '-', sacado, "REAIS", 0);
     } else{
@@ -187,8 +191,7 @@ void comprar(int usuariologado) {
     //funcionando :) (testa mais vezes com outros valores e tal)
     limpaterminal();
     char escolha;
-    float comprar, taxa;
-    verificacao(usuariologado);
+    float comprar;
     printf("══════════[Comprar Cripto]══════════\n");
     printf("════════════════════════════════════\n");
     printf("Cotação das Criptomoedas:\n\tBitcoin:\t%f\n\tEthereum:\t%f\n\tRipple:\t%f\n\nQue moeda deseja comprar? (B/E/R)", moedas.cotacaoBTC, moedas.cotacaoETH, moedas.cotacaoXRP);
@@ -201,6 +204,7 @@ void comprar(int usuariologado) {
         limpaterminal(); 
         printf("Você possui:\tR$%.2f\nCotação do Bitcoin:\t%f\n\nQuantos Bitcoins deseja comprar? ", pessoas[usuariologado].reais,moedas.cotacaoBTC);
         scanf("%f", &comprar);
+        verificacao(usuariologado);
         if(pessoas[usuariologado].reais - ((moedas.cotacaoBTC*comprar)+((moedas.cotacaoBTC*comprar)*0.02))>=0){    //verificar se vai dar valor negativo com a taxa aplicada
             pessoas[usuariologado].btc += comprar;                                                              //adiciona os bitcoins comprados
             pessoas[usuariologado].reais -= ((moedas.cotacaoBTC*comprar)+((moedas.cotacaoBTC*comprar)*0.02));   //faz a taxação na cotação e adiciona nos reais
@@ -217,6 +221,7 @@ void comprar(int usuariologado) {
         limpaterminal();
         printf("Você possui:\tR$%.2f\nCotação do Ethereum:\t%f\n\nQuantos Ethereum deseja comprar? ",pessoas[usuariologado].reais, moedas.cotacaoETH);
         scanf("%f", &comprar);
+        verificacao(usuariologado);
         if(pessoas[usuariologado].reais - ((moedas.cotacaoETH*comprar)+((moedas.cotacaoETH*comprar)*0.01))>=0){    
             pessoas[usuariologado].eth += comprar;                                                              
             pessoas[usuariologado].reais -= ((moedas.cotacaoETH*comprar)+((moedas.cotacaoETH*comprar)*0.01));   
@@ -233,6 +238,7 @@ void comprar(int usuariologado) {
         limpaterminal();
         printf("Você possui:\tR$%.2f\nCotação do Ripple:\t%f\n\nQuantos Ripple deseja comprar? ",pessoas[usuariologado].reais, moedas.cotacaoXRP);
         scanf("%f", &comprar);
+        verificacao(usuariologado);
         if(pessoas[usuariologado].reais - ((moedas.cotacaoXRP*comprar)+((moedas.cotacaoXRP*comprar)*0.01))>=0){    
             pessoas[usuariologado].xrp += comprar;                                                              
             pessoas[usuariologado].reais -= ((moedas.cotacaoXRP*comprar)+((moedas.cotacaoXRP*comprar)*0.01));   
@@ -256,7 +262,6 @@ void vender(int usuariologado) {
     limpaterminal();
     char escolha;
     float venda;
-    verificacao(usuariologado);
     printf("══════════[Vender Cripto]══════════\n");
     printf("════════════════════════════════════\n");
     printf("Cotação das Criptomoedas:\n\tBitcoin:\t%f\n\tEthereum:\t%f\n\tRipple:\t%f\n\nQue moeda deseja vender? (B/E/R)", moedas.cotacaoBTC, moedas.cotacaoETH, moedas.cotacaoXRP);
@@ -268,6 +273,7 @@ void vender(int usuariologado) {
         limpaterminal();
         printf("Você possui:\tR$%.2f\nCotação do Bitcoin:\t%f\n\nQuantos Bitcoins deseja vender? ", pessoas[usuariologado].reais,moedas.cotacaoBTC);
         scanf("%f", &venda);
+        verificacao(usuariologado);
         if(pessoas[usuariologado].btc - venda >= 0){
             //printf("Até aqui foi"); DEBUGANDO...
             pessoas[usuariologado].btc -= venda;                                
@@ -288,6 +294,7 @@ void vender(int usuariologado) {
         limpaterminal();
         printf("Você possui:\tR$%.2f\nCotação do Ethereum:\t%f\n\nQuantos Ethereuns deseja vender? ", pessoas[usuariologado].reais,moedas.cotacaoETH);
         scanf("%f", &venda);
+        verificacao(usuariologado);
         if(pessoas[usuariologado].eth - venda >= 0){
             //printf("Até aqui foi"); DEBUGANDO...
             pessoas[usuariologado].eth -= venda;                                
@@ -308,6 +315,7 @@ void vender(int usuariologado) {
         limpaterminal();
         printf("Você possui:\tR$%.2f\nCotação do Ripple:\t%f\n\nQuantos Ripples deseja vender? ", pessoas[usuariologado].reais,moedas.cotacaoXRP);
         scanf("%f", &venda);
+        verificacao(usuariologado);
         if(pessoas[usuariologado].xrp - venda >= 0){
             //printf("Até aqui foi"); DEBUGANDO...
             pessoas[usuariologado].xrp -= venda;                                
@@ -366,6 +374,7 @@ void cadastro(int usuariologado) {
     limpaterminal();
     char cpfcadastro[12];
     char senhacadastro[7];
+    int contador = 0;
 
     printf("══════════[Cadastro]══════════\n");
     printf("Digite seu CPF (Só pode possuir 11 dígitos): ");
@@ -404,6 +413,7 @@ void cadastro(int usuariologado) {
                 pessoas[i].eth = 0.00;
                 pessoas[i].xrp = 0.00;
                 pessoas[i].reais = 0.00;
+                contador +=1;
                 printf("Cadastro realizado com sucesso!\n");
                 espera();
                 menuinicial(usuariologado);
@@ -487,7 +497,7 @@ void menu(int usuariologado) {
             vender(usuariologado);
             break;
         case '7':
-            atualizar(usuariologado,&moedas);
+            atualizar(usuariologado);
             break;
         case '8':
             menuinicial(usuariologado);
@@ -517,9 +527,9 @@ void atualizar(int usuariologado) { //funfa agr
     verificacao(usuariologado);
     printf("══════════[Atualizar]══════════\n");
     printf("Cotação de moeda atualizadas!\n\nBTC: R$ %.4f\nETH: R$ %.4f\nXRP: R$ %.4f\n(B,E,R)", 
-    (moeda.cotacaoBTC*((rand()%11-5)/100))+moeda.cotacaoBTC, 
-    (moeda.cotacaoETH*((rand()%11-5)/100))+moeda.cotacaoETH, 
-    (moeda.cotacaoETH*((rand()%11-5)/100))+moeda.cotacaoETH);
+    (moedas.cotacaoBTC*((rand()%11-5)/100))+moedas.cotacaoBTC, 
+    (moedas.cotacaoETH*((rand()%11-5)/100))+moedas.cotacaoETH, 
+    (moedas.cotacaoETH*((rand()%11-5)/100))+moedas.cotacaoETH);
 }
 
 void criaextrato(int usuariologado, char sinal, float valor, char moeda[6], float taxa){
@@ -527,8 +537,8 @@ void criaextrato(int usuariologado, char sinal, float valor, char moeda[6], floa
     time_t t = time(NULL);  // Pega o horário atual
     struct tm tm = *localtime(&t); // Serve pra pegar cada informação das datas
 
-    snprintf(extrato, sizeof(extrato), "[%02d/%02d/%d %02d:%02d] \t%c\t%.2f \t%s \tTX: \t%.2f \tBTC: \t%.2f \tETH: \t%.2f \tXRP: \t%.2f",
-    tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, sinal, valor, moeda, taxa, moedas.cotacaoBTC, moedas.cotacaoETH, moedas.cotacaoXRP);
+    snprintf(extrato, sizeof(extrato), "   [%02d/%02d/%d %02d:%02d]\t\t %c\t\t%.2f    \t%s\t\t %.2f\t\t  %.2f\t\t\t  %.2f\t\t\t  %.2f",
+    tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, sinal, valor, moeda, taxa, pessoas[usuariologado].btc, pessoas[usuariologado].eth, pessoas[usuariologado].xrp);
 
     // Procura uma linha vazia no extrato
     for (int i = 0; i < 100; i++) {
