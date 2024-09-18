@@ -672,3 +672,16 @@ void recibovenda(float conversao, float taxa){
     printf("VENDA - TAXA = TOTAL \n");
     printf("%.2f - %.2f = %.2f \n", conversao, taxa, conversao-taxa);
 }
+
+void escrever_bin(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacaoXRP, int usuariologado){
+    FILE *arquivobin;
+    arquivobin = fopen("data.bin", "wb");
+    
+    fwrite(pessoas, sizeof(pessoa),1,arquivobin);
+    fwrite(cotacaoBTC, sizeof(float),cotacaoBTC,arquivobin);
+    fwrite(cotacaoETH);
+}
+
+void ler_bin(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacaoXRP, int usuariologado){
+    arquivobin = fopen("data.bin", "rb");
+}
