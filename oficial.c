@@ -296,9 +296,6 @@ void depositar(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotac
         espera();
         return;
     }
-    if(depositado < 0){ // talvez eu tenha levado a sério demais
-        printf("Vai toma no cu seu filho da puta para de ser burro aq é depósito seu animal bota um valor de gnt arrombado do krl toma nesse seu cu");
-    }
     verificacao(pessoas, usuariologado);
     pessoas[usuariologado].reais += depositado;
     consultarsaldo(pessoas, usuariologado);
