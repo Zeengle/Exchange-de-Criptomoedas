@@ -291,6 +291,11 @@ void depositar(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotac
     printf("|------------------------------------------------[Depositar]------------------------------------------------| \n");
     printf("Quantos reais deseja depositar?\n");
     scanf("%f", &depositado);
+    if (depositado < 0){
+        printf("Numero invalido\n");
+        espera();
+        return;
+    }
     if(depositado < 0){ // talvez eu tenha levado a sério demais
         printf("Vai toma no cu seu filho da puta para de ser burro aq é depósito seu animal bota um valor de gnt arrombado do krl toma nesse seu cu");
     }
@@ -307,6 +312,11 @@ void sacar(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacaoXR
     printf("|------------------------------------------------[Sacar]------------------------------------------------| \n");
     printf("Você possui %.2f reais para ser sacados \nQuantos reais deseja sacar?\n", pessoas[usuariologado].reais);
     scanf("%f", &sacado);
+    if (sacado < 0){
+        printf("Numero invalido\n");
+        espera();
+        return;
+    }
     verificacao(pessoas, usuariologado);
     if(sacado <= pessoas[usuariologado].reais){
         pessoas[usuariologado].reais -= sacado;
@@ -334,6 +344,11 @@ void comprar(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacao
         limpaterminal(); 
         printf("Você possui: R$%.2f\nCotação do Bitcoin: %.2f Taxa: 2.00%\nQuantos Bitcoins deseja comprar? \n", pessoas[usuariologado].reais,cotacaoBTC);
         scanf("%f", &comprar);
+        if (comprar < 0){
+            printf("Numero invalido\n");
+            espera();
+            return;
+        }
         compra = cotacaoBTC*comprar;
         taxa = ((cotacaoBTC*comprar)*0.02);
         verificacao(pessoas, usuariologado);
@@ -354,6 +369,11 @@ void comprar(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacao
         limpaterminal();
         printf("Você possui: R$%.2f\nCotação do Ethereum: %.2f Taxa: 1.00%\nQuantos Ethereum deseja comprar? \n",pessoas[usuariologado].reais, cotacaoETH);
         scanf("%f", &comprar);
+        if (comprar < 0){
+            printf("Numero invalido\n");
+            espera();
+            return;
+        }
         compra = cotacaoETH*comprar;
         taxa = ((cotacaoETH*comprar)*0.01);
         verificacao(pessoas, usuariologado);
@@ -374,6 +394,11 @@ void comprar(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacao
         limpaterminal();
         printf("Você possui:\tR$%.2f\nCotação do Ripple:\t%.2f Taxa: 1.00%\nQuantos Ripple deseja comprar? \n",pessoas[usuariologado].reais, cotacaoXRP);
         scanf("%f", &comprar);
+        if (comprar < 0){
+            printf("Numero invalido\n");
+            espera();
+            return;
+        }
         compra = cotacaoXRP*comprar;
         taxa = ((cotacaoXRP*comprar)*0.01);
         verificacao(pessoas, usuariologado);
@@ -412,6 +437,11 @@ void vender(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacaoX
         limpaterminal();
         printf("Você possui:\t%.2f BTC\nCotação do Bitcoin:\t%.2f\n\nQuantos Bitcoins deseja vender? ", pessoas[usuariologado].btc, cotacaoBTC);
         scanf("%f", &venda);
+        if (venda < 0){
+            printf("Numero invalido\n");
+            espera();
+            return;
+        }
         taxa = (venda * cotacaoBTC * 0.03);
         conversao = cotacaoBTC*venda;
         verificacao(pessoas, usuariologado);
@@ -434,6 +464,11 @@ void vender(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacaoX
         limpaterminal();
         printf("Você possui:\t%.2f ETH\nCotação do Ethereum:\t%.2f\n\nQuantos Ethereuns deseja vender? ", pessoas[usuariologado].eth, cotacaoETH);
         scanf("%f", &venda);
+        if (venda < 0){
+            printf("Numero invalido\n");
+            espera();
+            return;
+        }
         taxa = (venda * cotacaoETH * 0.02);
         conversao = cotacaoETH*venda;
         verificacao(pessoas, usuariologado);
@@ -455,6 +490,11 @@ void vender(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacaoX
         limpaterminal();
         printf("Você possui:\t%.2f XRP\nCotação do Ripple:\t%.2f\n\nQuantos Ripples deseja vender? ", pessoas[usuariologado].xrp, cotacaoXRP);
         scanf("%f", &venda);
+        if (venda < 0){
+            printf("Numero invalido\n");
+            espera();
+            return;
+        }
         taxa = (venda * cotacaoETH * 0.02);
         conversao = cotacaoETH*venda;
         verificacao(pessoas, usuariologado);
