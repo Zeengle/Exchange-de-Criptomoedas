@@ -44,15 +44,27 @@ void limpaterminal();
 void espera();
 void recibocompra(float compra, float taxa);
 void recibovenda(float compra, float taxa);
+void ler(FILE *file, pessoa pessoas[], int quantidade, float *cotacaoBTC, float *cotacaoETH, float *cotacaoXRP);
+void escrever(pessoa pessoas[], int quantidade, float cotacaoBTC, float cotacaoETH, float cotacaoXRP);
+int arquivoexiste(const char *filename);
 
 /*---------------------------------------MAIN----------------------------------------*/
 
 int main() {
+    FILE *file;
     pessoa pessoas[10];
     float cotacaoBTC = 100;
     float cotacaoETH = 50;
     float cotacaoXRP = 25;
     int usuariologado = -1;
+
+    int verificacao = arquivoexiste("dados.bin");
+
+    if(verificacao == 0){ // O arquivo existe
+        escrever(pessoas, 10, cotacaoBTC, cotacaoETH, cotacaoXRP);
+    }else{
+        ler(&file, pessoas, 10, &cotacaoBTC, &cotacaoETH, &cotacaoXRP);
+    }
     menuinicial(pessoas, cotacaoBTC, cotacaoETH, cotacaoXRP, usuariologado);
     return 0;
 }
@@ -82,6 +94,7 @@ void menuinicial(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cot
             login(pessoas, cotacaoBTC, cotacaoETH, cotacaoXRP, usuariologado);
             return;
         case '3':
+            escrever(pessoas, 10, cotacaoBTC, cotacaoETH, cotacaoXRP);
             exit(0);
             return;
         default:
@@ -93,7 +106,6 @@ void menuinicial(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cot
 
 // Mostra as opções que usuário pode executar quando logado
 void menu(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacaoXRP, int usuariologado){
-    limpaterminal();
     limpaterminal();
     char opc;
     while (1) {
@@ -293,7 +305,7 @@ void sacar(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacaoXR
     limpaterminal();
     float sacado = 0;
     printf("|------------------------------------------------[Sacar]------------------------------------------------| \n");
-    printf("Você possui %.2f reais para ser scados \nQuantos reais deseja sacar?\n");
+    printf("Você possui %.2f reais para ser sacados \nQuantos reais deseja sacar?\n", pessoas[usuariologado].reais);
     scanf("%f", &sacado);
     verificacao(pessoas, usuariologado);
     if(sacado <= pessoas[usuariologado].reais){
@@ -320,7 +332,7 @@ void comprar(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacao
     {
     case 'B':
         limpaterminal(); 
-        printf("Você possui: R$%.2f\nCotação do Bitcoin: %.2f Taxa: 2.00%\n\nQuantos Bitcoins deseja comprar? \n", pessoas[usuariologado].reais,cotacaoBTC);
+        printf("Você possui: R$%.2f\nCotação do Bitcoin: %.2f Taxa: 2.00%\nQuantos Bitcoins deseja comprar? \n", pessoas[usuariologado].reais,cotacaoBTC);
         scanf("%f", &comprar);
         compra = cotacaoBTC*comprar;
         taxa = ((cotacaoBTC*comprar)*0.02);
@@ -368,7 +380,6 @@ void comprar(pessoa pessoas[], float cotacaoBTC, float cotacaoETH, float cotacao
         if(roundf((pessoas[usuariologado].reais - (compra+taxa))* 100.00)/100.00>=0){    
             pessoas[usuariologado].xrp += comprar;                                                              
             pessoas[usuariologado].reais -= (compra+taxa);   
-            consultarsaldo(pessoas, usuariologado);
             criaextrato(pessoas, usuariologado, '+', compra, "XRP", 0.01);
             recibocompra(compra, taxa);
             consultarsaldo(pessoas, usuariologado);                                                          
@@ -629,4 +640,35 @@ void recibovenda(float conversao, float taxa){
     printf("Total da venda: \n");
     printf("VENDA - TAXA = TOTAL \n");
     printf("%.2f - %.2f = %.2f \n", conversao, taxa, conversao-taxa);
+}
+
+void escrever(pessoa pessoas[], int quantidade, float cotacaoBTC, float cotacaoETH, float cotacaoXRP) {
+    FILE *file = fopen("dados.bin", "wb");
+
+    fwrite(pessoas, sizeof(pessoa), 10, file);
+    fwrite(&cotacaoBTC, sizeof(float), 1, file);
+    fwrite(&cotacaoETH, sizeof(float), 1, file);
+    fwrite(&cotacaoXRP, sizeof(float), 1, file);
+
+    fclose(file);
+}
+
+void ler(FILE *file, pessoa pessoas[], int quantidade, float *cotacaoBTC, float *cotacaoETH, float *cotacaoXRP) {
+    file = fopen("dados.bin", "rb");
+
+    fread(pessoas, sizeof(pessoa), 10, file);
+    fread(cotacaoBTC, sizeof(float), 1, file);
+    fread(cotacaoETH, sizeof(float), 1, file);
+    fread(cotacaoXRP, sizeof(float), 1, file);
+
+    fclose(file);
+}
+
+int arquivoexiste(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file != NULL) {
+        fclose(file); 
+        return 1;  
+    }
+    return 0;
 }
